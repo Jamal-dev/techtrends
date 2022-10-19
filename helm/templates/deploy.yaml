@@ -21,7 +21,7 @@ spec:
         app: {{ .Values.appname }}
     spec:
       containers:
-      - image: {{ .Values.image.dockerRegistry }}/{{ .Values.image.repository }}:{{ .Values.image.tag }}
+      - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: techtrends
         ports:
