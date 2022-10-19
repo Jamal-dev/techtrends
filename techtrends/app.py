@@ -10,8 +10,10 @@ from werkzeug.exceptions import abort
 app = Flask(__name__)
 app.config['connection_count'] = 0
 
-# Function to get a database connection.
-# This function connects to database with the name `database.db`
+''' 
+    Function to get a database connection.
+     This function connects to database with the name `database.db`
+'''
 def get_db_connection():
     try:
         if os.path.exists('database.db'):
@@ -25,8 +27,9 @@ def get_db_connection():
     except Exception as e:
         app.logger.error(f"Connection is not established because of exception: {e}")
 
-
-# Function to get a post using its ID
+''' 
+    Function to get a post using its ID
+''' 
 def get_post(post_id):
     connection = get_db_connection()
     post = connection.execute('SELECT * FROM posts WHERE id = ?',
@@ -35,8 +38,9 @@ def get_post(post_id):
     return post
 
 
-
-# Define the main route of the web application 
+''' 
+    Define the main route of the web application 
+''' 
 @app.route('/')
 def index():
     connection = get_db_connection()
@@ -44,8 +48,10 @@ def index():
     connection.close()
     return render_template('index.html', posts=posts)
 
-# Define how each individual article is rendered 
-# If the post ID is not found a 404 page is shown
+''' 
+    Define how each individual article is rendered 
+     If the post ID is not found a 404 page is shown
+'''
 @app.route('/<int:post_id>')
 def post(post_id):
     post = get_post(post_id)
@@ -56,13 +62,17 @@ def post(post_id):
         app.logger.debug(f"Article \"{post['title']}\" retrieved!")
         return render_template('post.html', post=post)
 
-# Define the About Us page
+'''
+ Define the About Us page
+'''
 @app.route('/about')
 def about():
     app.logger.debug('About page is retrieved')
     return render_template('about.html')
 
-# Define the post creation functionality 
+'''
+    Define the post creation functionality 
+'''
 @app.route('/create', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -83,7 +93,9 @@ def create():
 
     return render_template('create.html')
 
-# Define healthz endpoint
+''' 
+    Define healthz endpoint
+'''
 @app.route("/healthz")
 def healthz():
     try:
@@ -130,7 +142,9 @@ def metrics():
         app.logger.error('metrics request failed')
         return response
 
-# start the application on port 3111
+''' 
+ start the application on port 3111
+''' 
 if __name__ == "__main__":
     file_handler = logging.FileHandler(filename='app.log')
     stdout_handler = logging.StreamHandler(stream=sys.stdout)
