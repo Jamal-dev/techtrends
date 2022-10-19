@@ -1,16 +1,30 @@
 import sqlite3
 import logging
 import json
+import os
+import sys
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
 from werkzeug.exceptions import abort
+
+# Define the Flask application
+app = Flask(__name__)
+app.config['connection_count'] = 0
 
 # Function to get a database connection.
 # This function connects to database with the name `database.db`
 def get_db_connection():
-    connection = sqlite3.connect('database.db')
-    connection.row_factory = sqlite3.Row
-    app.logger.info("Database connection established!")
-    return connection
+    try:
+        if os.path.exists('database.db'):
+            connection = sqlite3.connect('database.db')
+        else:
+            raise RuntimeError(f'database.db does not exist at {os.getcwd()}, please run init_db.py')
+        connection.row_factory = sqlite3.Row
+        app.logger.info("Database connection established!")
+        app.config['connection_count'] += 1
+        return connection
+    except Exception as e:
+        app.logger.error(f"Connection is not established because of exception: {e}")
+
 
 # Function to get a post using its ID
 def get_post(post_id):
@@ -20,9 +34,7 @@ def get_post(post_id):
     connection.close()
     return post
 
-# Define the Flask application
-app = Flask(__name__)
-app.config['connection_count'] = 0
+
 
 # Define the main route of the web application 
 @app.route('/')
@@ -120,7 +132,13 @@ def metrics():
 
 # start the application on port 3111
 if __name__ == "__main__":
+    file_handler = logging.FileHandler(filename='app.log')
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    stderr_handler =logging.StreamHandler(stream=sys.stderr)
+    handlers = [file_handler , stderr_handler, stdout_handler]
     logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S')
+            datefmt='%Y-%m-%d %H:%M:%S',
+            level= logging.DEBUG,
+            handlers = handlers)
     logging.info('Starting up the application')
     app.run(host='0.0.0.0', port='3111')
