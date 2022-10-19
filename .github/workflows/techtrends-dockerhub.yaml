@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Konstruktoid Python linting
+        uses: konstruktoid/action-pylint@master
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
