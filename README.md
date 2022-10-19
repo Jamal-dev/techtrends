@@ -1,10 +1,21 @@
 # TechTreds Web Application
 
-This is a Flask application that lists the latest articles within the cloud-native ecosystem.
+This is a cloud native application in which people can share news using this platform with in the clould native ecosystem.
 
-## Run 
+![application](./screenshots/techTrendIdea.png)
 
-To run this application there are 2 steps required:
+This project using docker for the image creation, and Kubernetes for the container orchestration.
 
-1. Initialize the database by using the `python init_db.py` command. This will create or overwrite the `database.db` file that is used by the web application.
-2.  Run the TechTrends application by using the `python app.py` command. The application is running on port `3111` and you can access it by querying the `http://127.0.0.1:3111/` endpoint.
+![frontend](./screenshots/docker-run-local1.png)
+![dockerrun](./screenshots/docker-run-local.png)
+
+It also uses Github action for the continuous integration
+
+![ci-github-actions](./screenshots/ci-github-actions.png)
+
+![ci-dockerhub](./screenshots/ci-dockerhub.png)
+
+For the continuous development Hlem+ ArgoCD was utilized
+
+
+![techtrends-staging](./screenshots/techtrends-staging.png)
